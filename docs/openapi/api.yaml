@@ -1,0 +1,91 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Fridge Master
+servers:
+  - url: http://127.0.0.1/api/v1
+    description: Test server
+paths:
+  /locations:
+    get:
+      tags:
+        - Locations
+      summary: List all locations
+      operationId: listlocations
+      responses:
+        200:
+          description: Array of locations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Locations'
+        403:
+                $ref: '#/components/responses/NotAuthorizedError'
+        default:
+          $ref: '#/components/responses/UnexpectedError'
+
+
+components:
+  schemas:
+    Locations:
+      type: array
+      items:
+        $ref: '#/components/schemas/Location'
+    Location:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        name:
+          type: string
+          example: Toronto
+        free_blocks:
+          type: integer
+          example: 10
+  responses:
+    NotAuthorizedError:
+      description: 'Unauthorized'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                description: Technical error
+                items:
+                  type: string
+                  example: Unauthorized
+              message:
+                type: string
+                description: User message
+                example: You do not have access
+              type:
+                type: string
+                description: Error type
+                example: UnauthorizedException
+    UnexpectedError:
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                description: Unexpected error
+                items:
+                  type: string
+                  example: Unexpected error
+              message:
+                type: string
+                description: User message
+                example: Unexpected error
+              type:
+                type: string
+                description: Error type
+                example: UnexpectedException
+
+
+
