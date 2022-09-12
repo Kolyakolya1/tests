@@ -23,6 +23,59 @@ paths:
                 $ref: '#/components/responses/NotAuthorizedError'
         default:
           $ref: '#/components/responses/UnexpectedError'
+  /blocks:
+    post:
+      tags:
+        - Blocks
+      summary: Get required number of blocks
+      operationId: checkblocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                location_id:
+                  type: integer
+                  description: Location id
+                  example: 10
+                  required: true
+                product_volume:
+                  type: number
+                  description: Product volume
+                  example: 100
+                  required: true
+                storage_temperature:
+                  type: number
+                  description: Storage temperature
+                  example: -5
+                  required: true
+                storage_period_from:
+                  type: string
+                  format: date
+                  description: Strage period from
+                  example: '2022/09/12'
+                  required: true
+                storage_period_to:
+                  type: integer
+                  description: Storage period to
+                  example: 5
+                  maximum: 24
+      responses:
+        200:
+          description: Required number of blocks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blocks'
+        403:
+          $ref: '#/components/responses/NotAuthorizedError'
+        422:
+          $ref: '#/components/responses/ValidationErrorsResponse'
+        default:
+          $ref: '#/components/responses/UnexpectedError'
+
+
 
 
 components:
@@ -43,6 +96,24 @@ components:
         free_blocks:
           type: integer
           example: 10
+    Blocks:
+      type: object
+      properties:
+        required_number_of_blocks:
+          type: integer
+          description: Required number of blocks
+          example: 10
+        storage_cost:
+          type: number
+          description: Storage cost
+          example: 1000
+        free_blocks:
+          type: boolean
+          description: Free blocks
+          example: true
+
+
+
   responses:
     NotAuthorizedError:
       description: 'Unauthorized'
@@ -86,6 +157,48 @@ components:
                 type: string
                 description: Error type
                 example: UnexpectedException
+    ValidationErrorsResponse:
+      description: Validation errors
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: object
+                properties:
+                  location_id:
+                    type: array
+                    items:
+                      type: string
+                      example: The attribute must be an integer
+                  product_volume:
+                    type: array
+                    items:
+                      type: string
+                      example: The attribute must be a number
+                  storage_temperature:
+                    type: array
+                    items:
+                      type: string
+                      example: The attribute must be a number  and  maximum 0
+                  storage_period_from:
+                    type: array
+                    items:
+                      type: string
+                      example: The attribute is not a valid date
+                  storage_period_to:
+                    type: array
+                    items:
+                      type: string
+                      example: The attribute must be an integer and  maximum 24
+              message:
+                type: string
+                example: 'Incorrect data sent'
+              type:
+                type: string
+                example: ValidationException
+
 
 
 
