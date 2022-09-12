@@ -137,6 +137,22 @@ paths:
           $ref: '#/components/responses/ValidationErrorsResponse'
         default:
           $ref: '#/components/responses/UnexpectedError'
+    get:
+      tags:
+        - Bookings
+      summary: 'List all booking'
+      operationId: listbooking
+      responses:
+        200:
+          description: Array of booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bookings'
+        403:
+          $ref: '#/components/responses/NotAuthorizedError'
+        default:
+          $ref: '#/components/responses/UnexpectedError'
 
 
 
@@ -187,8 +203,10 @@ components:
         code:
           type: string
           example: '1234567890qw'
-
-
+    Bookings:
+      type: array
+      items:
+        $ref: '#/components/schemas/Booking'
 
   responses:
     NotAuthorizedError:
