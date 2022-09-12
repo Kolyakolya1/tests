@@ -53,7 +53,7 @@ paths:
                 storage_period_from:
                   type: string
                   format: date
-                  description: Strage period from
+                  description: Storage period from
                   example: '2022/09/12'
                   required: true
                 storage_period_to:
@@ -74,6 +74,70 @@ paths:
           $ref: '#/components/responses/ValidationErrorsResponse'
         default:
           $ref: '#/components/responses/UnexpectedError'
+  /bookings:
+    post:
+      tags:
+        - Bookings
+      summary: 'Create booking'
+      operationId: booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                location_id:
+                  type: integer
+                  required: true
+                  description: Location Id
+                  example: 10
+                product_volume:
+                  type: number
+                  required: true
+                  description: Product volume
+                  example: 100
+                storage_temperature:
+                  type: number
+                  required: true
+                  description: Storage temperature
+                  example: -5
+                storage_period_from:
+                  type: string
+                  format: date
+                  required: true
+                  description: Storage period from
+                  example: '2022/07/01'
+                storage_period_to:
+                  type: integer
+                  required: true
+                  description: 'Storage period to'
+                  example: '5'
+                  maximum: 24
+                status:
+                  type: boolean
+                  example: true
+      responses:
+        200:
+          description: Blocks booked
+          content:
+            application/json:
+              schema:
+                properties:
+                  success:
+                    type: string
+                    example: true
+                  message:
+                    type: string
+                    example: Success
+                  model:
+                    $ref: '#/components/schemas/Booking'
+        403:
+          $ref: '#/components/responses/NotAuthorizedError'
+        422:
+          $ref: '#/components/responses/ValidationErrorsResponse'
+        default:
+          $ref: '#/components/responses/UnexpectedError'
+
 
 
 
@@ -111,6 +175,18 @@ components:
           type: boolean
           description: Free blocks
           example: true
+    Booking:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+        costs:
+          type: number
+          example: 1000
+        code:
+          type: string
+          example: '1234567890qw'
 
 
 
